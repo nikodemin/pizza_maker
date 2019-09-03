@@ -1,0 +1,118 @@
+#logo {
+    height: 60px;
+}
+
+body {
+    max-width: 800px;
+    margin: auto;
+}
+
+#topMenu {
+    height: 80px;
+}
+
+#topMenu h3 {
+    display: inline;
+}
+
+#topMenu ul a {
+    color: coral;
+}
+
+#topMenu ul a:hover {
+    color: black;
+}
+
+#slider img {
+    width: 100%;
+}
+
+#slider .carousel-inner {
+    width: 100%;
+    max-height: 400px !important;
+}
+
+#slider .carousel-caption {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-20%);
+    text-shadow: 1px 1px 1px black;
+}
+
+section.menu {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+}
+
+div.menuItem {
+    display: inline-block;
+    text-align: center;
+    font-size: 120%;
+    width: 33%;
+    min-width: 130px;
+    padding: 20px;
+    border: black 1px;
+}
+
+div.menuItem img {
+    width: 100%;
+    max-width: 120px;
+}
+
+div.menuItem a {
+    color: coral;
+}
+
+div.menuItem a:hover {
+    color: black;
+    text-decoration: none;
+}
+
+div.products {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+div.hot {
+    color: red;
+    margin-right: 3px;
+    margin-bottom: -24px;
+    z-index: 10;
+    text-align: right;
+    text-shadow: black 1px 1px 1px;
+}
+
+div.tags button {
+    display: inline-block;
+}
+
+div.products div.productItem {
+    width: 33%;
+    min-width: 210px;
+}
+
+footer {
+    clear: both;
+    background-color: rgba(0, 0, 0, 0.58);
+    padding: 30px;
+}
+
+#popupContainer{
+    z-index: 99;
+    position: fixed;
+    max-width: 300px;
+    right: 10%;
+    bottom: 0;
+}
+
+#popupContainer div.popup{
+    margin-top: 10px;
+    max-width: 250px;
+}
+
+#popupContainer div.popup span.close{
+    float: right;
+    cursor: pointer;
+}
