@@ -116,8 +116,7 @@ public class OrderServiceTests {
         when(orderService.getRecentOrders()).thenReturn(orders);
         orderService.getTopClients();
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
-        //todo
-        //verify(mappingService,times(10)).toUserDto(userArgumentCaptor.capture());
+        verify(modelMapper,times(10)).map(userArgumentCaptor.capture(),anyObject());
         for (int i = 0; i < 10; i++) {
             Assert.assertEquals(true,userArgumentCaptor.getAllValues().contains(users.get(i)));
             Assert.assertEquals(false,userArgumentCaptor.getAllValues().contains(uncountedUser));

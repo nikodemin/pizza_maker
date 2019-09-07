@@ -44,12 +44,10 @@ public class ProductServiceTests {
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
     }
-/*
-    todo
+
 
     @Test
     public void getTopProductsDtoTest(){
-        productService.setMappingService(mappingService);
         List<_Order> orders = new ArrayList<>();
 
         AbstractProduct product = new CatalogProduct();
@@ -81,8 +79,8 @@ public class ProductServiceTests {
         productService.getTopProductsDto();
         ArgumentCaptor<AbstractProduct> abstractProductArgumentCaptor =
                 ArgumentCaptor.forClass(AbstractProduct.class);
-        verify(mappingService,times(2))
-                .toProductDto(abstractProductArgumentCaptor.capture());
+        verify(modelMapper,times(2))
+                .map(abstractProductArgumentCaptor.capture(),anyObject());
         List<AbstractProduct> products = abstractProductArgumentCaptor.getAllValues();
         Assert.assertEquals(true, products.contains(product));
         Assert.assertEquals(true, products.contains(product2));
@@ -92,7 +90,6 @@ public class ProductServiceTests {
 
     @Test
     public void getProductDtosWithTagsTest(){
-        productService.setMappingService(mappingService);
         String category = "category";
         Tag tag = new Tag();
         tag.setName("tag");
@@ -118,8 +115,8 @@ public class ProductServiceTests {
         productService.getProductDtosWithTags(category,Arrays.asList(tagDto,tagDto2));
         ArgumentCaptor<CatalogProduct> catalogProductCaptor =
                 ArgumentCaptor.forClass(CatalogProduct.class);
-        verify(mappingService, times(1))
-                .toProductDto(catalogProductCaptor.capture());
+        verify(modelMapper, times(1))
+                .map(catalogProductCaptor.capture(),anyObject());
         List<CatalogProduct> products = catalogProductCaptor.getAllValues();
         Assert.assertEquals(true,products.contains(product));
         Assert.assertEquals(false,products.contains(product2));
@@ -159,9 +156,8 @@ public class ProductServiceTests {
 
     @Test
     public void getTopProductsDtoForAdminTest(){
-        productService.setMappingService(mappingService);
         List<_Order> orders = new ArrayList<>();
-        when(mappingService.toProductDto(any())).thenReturn(new ProductDto());
+        when(modelMapper.map(any(),eq(ProductDto.class))).thenReturn(new ProductDto());
 
         AbstractProduct product = new CatalogProduct();
         product.setCategory(new Category());
@@ -192,14 +188,12 @@ public class ProductServiceTests {
         productService.getTopProductsDtoForAdmin();
         ArgumentCaptor<AbstractProduct> abstractProductArgumentCaptor =
                 ArgumentCaptor.forClass(AbstractProduct.class);
-        verify(mappingService,times(3))
-                .toProductDto(abstractProductArgumentCaptor.capture());
+        verify(modelMapper,times(3))
+                .map(abstractProductArgumentCaptor.capture(),anyObject());
         List<AbstractProduct> products = abstractProductArgumentCaptor.getAllValues();
         Assert.assertEquals(true,products.contains(product));
         Assert.assertEquals(true,products.contains(product2));
         Assert.assertEquals(true,products.contains(product3));
         Assert.assertEquals(false,products.contains(uncountedProduct));
     }
-
- */
 }

@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,14 +41,6 @@ public class OrderService {
 
     @PostConstruct
     private void init(){
-        TypeMap<AbstractProduct,ProductDto> toProductDtoTM;
-        try {
-            toProductDtoTM = modelMapper.createTypeMap(AbstractProduct.class,ProductDto.class);
-        }catch (IllegalStateException e) {
-            toProductDtoTM = modelMapper.getTypeMap(AbstractProduct.class,ProductDto.class);
-        }
-        toProductDtoTM.addMapping(src->src instanceof CustomProduct,ProductDto::setIsCustom);
-
         Converter<_Order,OrderDto> toOrderDtoConverter = new AbstractConverter<_Order, OrderDto>() {
             @Override
             protected OrderDto convert(_Order order) {
@@ -57,7 +48,12 @@ public class OrderService {
                 res.setDate(order.getDate().toString());
                 res.setDeliveryMethod(order.getDeliveryMethod().toString());
                 List<ProductDto> items = order.getItems().stream()
-                        .map(p->modelMapper.map(p,ProductDto.class)).collect(Collectors.toList());
+                        .map(p->{
+                            ProductDto productDto = modelMapper.map(p,ProductDto.class);
+                            if(p instanceof CustomProduct)
+                                productDto.setIsCustom(true);
+                            return productDto;
+                        }).collect(Collectors.toList());
                 res.setItems(items);
                 res.setStatus(order.getStatus().toString());
                 res.setUsername(order.getClient().getUsername());

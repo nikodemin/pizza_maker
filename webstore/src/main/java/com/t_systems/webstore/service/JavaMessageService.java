@@ -25,7 +25,7 @@ public class JavaMessageService {
     }
 
     public void sendMessage(String text){
-        jmsTemplate().send(session -> session.createTextMessage(text));
+        jmsTemplate().convertAndSend("webstore_top_products",text);
     }
 
     @Bean
@@ -37,7 +37,7 @@ public class JavaMessageService {
     @Bean
     public JmsTemplate jmsTemplate(){
         JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory());
-        jmsTemplate.setDefaultDestinationName("webstore");
+        jmsTemplate.setPubSubDomain(true);
         return jmsTemplate;
     }
 }

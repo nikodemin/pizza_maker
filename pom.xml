@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>webstore</module>
         <module>advertising_stand</module>
+        <module>webstore</module>
     </modules>
 </project>

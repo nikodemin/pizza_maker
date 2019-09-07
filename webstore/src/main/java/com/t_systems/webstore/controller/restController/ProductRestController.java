@@ -3,22 +3,19 @@ package com.t_systems.webstore.controller.restController;
 import com.t_systems.webstore.model.dto.*;
 import com.t_systems.webstore.model.entity.AbstractProduct;
 import com.t_systems.webstore.model.entity.CatalogProduct;
-import com.t_systems.webstore.model.entity.CustomProduct;
 import com.t_systems.webstore.service.FilesService;
 import com.t_systems.webstore.service.ProductService;
+import com.t_systems.webstore.validator.ImageValidator;
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.AbstractConverter;
-import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
 
@@ -28,13 +25,7 @@ public class ProductRestController {
     private final ProductService productService;
     private final ModelMapper modelMapper;
     private final FilesService filesService;
-
-    @PostConstruct
-    private void init() {
-        TypeMap<AbstractProduct,ProductDto> typeMap =
-                modelMapper.getTypeMap(AbstractProduct.class,ProductDto.class);
-        typeMap.addMapping(src->src instanceof CustomProduct,ProductDto::setIsCustom);
-    }
+    private final ImageValidator imageValidator;
 
     @InitBinder
     public void initBinder(WebDataBinder dataBinder) {
@@ -44,10 +35,14 @@ public class ProductRestController {
             return;
         }
 
-        if (target.getClass() == CategoryDto.class)
+        if (target.getClass() == CategoryDto.class) {
+            dataBinder.setValidator(imageValidator);
             dataBinder.registerCustomEditor(byte[].class, new ByteArrayMultipartFileEditor());
-        if (target.getClass() == ProductDto.class)
+        }
+        if (target.getClass() == ProductDto.class) {
+            dataBinder.setValidator(imageValidator);
             dataBinder.setDisallowedFields("category", "tags", "ingredients");
+        }
     }
 
     @GetMapping("/getProducts/{category}")
@@ -79,6 +74,8 @@ public class ProductRestController {
         OrderDto orderDto = (OrderDto) session.getAttribute("order");
         ProductDto productDto = modelMapper.map(productService.getProduct(product.getName(),
                 product.getIsCustom()? principal.getName() : null),ProductDto.class);
+        if(product.getIsCustom())
+            productDto.setIsCustom(true);
         orderDto.getItems().add(productDto);
         session.setAttribute("order",orderDto);
         return new ResponseEntity<>("CatalogProduct added to cart!", HttpStatus.OK);
@@ -91,6 +88,8 @@ public class ProductRestController {
         OrderDto orderDto = (OrderDto) session.getAttribute("order");
         ProductDto productDto = modelMapper.map(productService.getProduct(product.getName(),
                 product.getIsCustom()? principal.getName() : null),ProductDto.class);
+        if(product.getIsCustom())
+            productDto.setIsCustom(true);
         orderDto.getItems().remove(productDto);
         session.setAttribute("order",orderDto);
         return new ResponseEntity<>("CatalogProduct removed from cart!", HttpStatus.OK);
@@ -103,6 +102,8 @@ public class ProductRestController {
         OrderDto orderDto = (OrderDto) session.getAttribute("order");
         ProductDto productDto = modelMapper.map(productService.getProduct(product.getName(),
                 product.getIsCustom()? principal.getName() : null),ProductDto.class);
+        if(product.getIsCustom())
+            productDto.setIsCustom(true);
         orderDto.getItems().removeIf(p->p.equals(productDto));
         session.setAttribute("order",orderDto);
         return new ResponseEntity<>("CatalogProduct deleted from cart!", HttpStatus.OK);
@@ -138,7 +139,9 @@ public class ProductRestController {
                           Principal principal){
         OrderDto order = (OrderDto)session.getAttribute("order");
         AbstractProduct clientProduct = productService.getProduct(product, principal.getName());
-        order.getItems().add(modelMapper.map(clientProduct,ProductDto.class));
+        ProductDto productDto = modelMapper.map(clientProduct, ProductDto.class);
+        productDto.setIsCustom(true);
+        order.getItems().add(productDto);
         session.setAttribute("order",order);
         return new ResponseEntity<>("Product added to cart!", HttpStatus.OK);
     }
@@ -159,7 +162,7 @@ public class ProductRestController {
     }
 
     @PostMapping("/admin/addCategory")
-    public ResponseEntity<?> addCategory(@ModelAttribute("categoryDto") CategoryDto category) throws Exception{
+    public ResponseEntity<?> addCategory(@ModelAttribute("categoryDto") @Valid CategoryDto category) throws Exception{
             String path = filesService.saveUploadedFiles(category.getFiles()).get(0);
             productService.addCategory(category, path);
             return new ResponseEntity<String>("Category added!", HttpStatus.OK);
@@ -268,7 +271,7 @@ public class ProductRestController {
 
     @PostMapping("/admin/addProdcut/{category}")
     public ResponseEntity<?> addProduct(@PathVariable("category") String category,
-                                        @ModelAttribute("productDto") ProductDto productDto) throws Exception{
+                                        @ModelAttribute("productDto") @Valid ProductDto productDto) throws Exception{
         productService.addProduct(productDto,category);
         return new ResponseEntity<>("CatalogProduct added!", HttpStatus.OK);
     }
@@ -283,5 +286,10 @@ public class ProductRestController {
     @GetMapping("/admin/getTopProducts")
     public List<ProductDto> getTopProducts(){
         return productService.getTopProductsDtoForAdmin();
+    }
+
+    @GetMapping("/external/getTopProducts")
+    public List<ProductDto> extGetTopProducts(){
+        return productService.getTopProductsDto();
     }
 }

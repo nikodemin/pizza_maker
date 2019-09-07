@@ -10,7 +10,8 @@ import java.util.List;
 public class ProductDto {
 
     private String name;
-    private Integer price;
+    private Integer priceDollars;
+    private Integer priceCents;
     private Integer spicy;
     private String image;
     private CategoryDto category;
@@ -31,5 +32,16 @@ public class ProductDto {
             return ingredients.get(ingredients.size() - 1);
         else
             return new IngredientDto();
+    }
+
+    public Integer getPrice() {
+        if (priceCents == null || priceDollars == null)
+            return null;
+        return priceDollars*100 + priceCents;
+    }
+
+    public void setPrice(Integer price) {
+        priceDollars = price/100;
+        priceCents = price%100;
     }
 }

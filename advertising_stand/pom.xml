@@ -47,12 +47,13 @@
         <!-- maven-compiler-plugin -->
         <maven.compiler.target>1.7</maven.compiler.target>
         <maven.compiler.source>1.7</maven.compiler.source>
-        <version.primefaces>7.0</version.primefaces>
-        <version.primefaces.themes>1.0.10</version.primefaces.themes>
         <version.activemq>5.7.0</version.activemq>
         <version.jms>2.0.1</version.jms>
         <version.jaxb>2.2.11</version.jaxb>
         <version.activation>1.1.1</version.activation>
+        <version.websocket>1.1</version.websocket>
+        <version.faces>3.0.0.CR1</version.faces>
+        <version.omnifaces>3.3</version.omnifaces>
     </properties>
 
     <dependencyManagement>
@@ -144,10 +145,11 @@
 
         <!-- Import the JSF API, we use provided scope as the API is included in 
             JBoss WildFly -->
+        <!-- https://mvnrepository.com/artifact/org.jboss.spec.javax.faces/jboss-jsf-api_2.3_spec -->
         <dependency>
             <groupId>org.jboss.spec.javax.faces</groupId>
-            <artifactId>jboss-jsf-api_2.2_spec</artifactId>
-            <scope>provided</scope>
+            <artifactId>jboss-jsf-api_2.3_spec</artifactId>
+            <version>${version.faces}</version>
         </dependency>
 
         <!-- Now we declare any tools needed -->
@@ -190,18 +192,13 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.omnifaces/omnifaces -->
         <dependency>
-            <groupId>org.primefaces</groupId>
-            <artifactId>primefaces</artifactId>
-            <version>${version.primefaces}</version>
+            <groupId>org.omnifaces</groupId>
+            <artifactId>omnifaces</artifactId>
+            <version>${version.omnifaces}</version>
         </dependency>
 
-        <!--Primefaces themes-->
-        <dependency>
-            <groupId>org.primefaces.themes</groupId>
-            <artifactId>all-themes</artifactId>
-            <version>${version.primefaces.themes}</version>
-        </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.activemq/activemq-core -->
         <dependency>
             <groupId>org.apache.activemq</groupId>
@@ -235,6 +232,19 @@
             <artifactId>activation</artifactId>
             <version>${version.activation}</version>
         </dependency>
+
+        <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+            <version>${version.websocket}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -259,15 +269,6 @@
             </plugin>
         </plugins>
     </build>
-
-    <repositories>
-        <repository>
-            <id>prime-repo</id>
-            <name>PrimeFaces Maven Repository</name>
-            <url>http://repository.primefaces.org</url>
-            <layout>default</layout>
-        </repository>
-    </repositories>
 
     <profiles>
         <profile>

@@ -1,0 +1,49 @@
+header {
+    background-color: gold;
+    font-size: 150%;
+    border-radius: 20px;
+    padding: 10px;
+    max-width: 1000px;
+    margin: auto;
+    text-align: center;
+}
+
+header a, header a:visited {
+    text-decoration: none;
+    text-shadow: black 1px 1px 1px;
+    color: black;
+}
+
+header a:hover {
+    text-decoration: none;
+    color: orangered;
+}
+
+#app {
+    max-width: 800px;
+    margin: auto;
+}
+
+div.products {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+div.hot {
+    color: red;
+    margin-right: 3px;
+    margin-bottom: -24px;
+    z-index: 10;
+    text-align: right;
+    text-shadow: black 1px 1px 1px;
+    background-color: gold;
+    width: 60px;
+    padding: 6px;
+    border-radius: 26px;
+}
+
+div.products div.productItem {
+    width: 33%;
+    min-width: 210px;
+}

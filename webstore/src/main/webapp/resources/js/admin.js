@@ -11,7 +11,8 @@ $(function () {
         ingredients: [],
         tags: [],
         categoryTags: [],
-        categoryIngs: []
+        categoryIngs: [],
+        topProducts: false
     }
 
     function getCategories() {
@@ -97,6 +98,16 @@ $(function () {
         })
     }
 
+    function showButtons() {
+        $('.topHide').show()
+        vueData.topProducts=false
+    }
+
+    function hideButtons() {
+        $('.topHide').hide()
+        vueData.topProducts=true
+    }
+
     var app = new Vue({
         el: '#app',
         data: vueData,
@@ -137,6 +148,7 @@ $(function () {
 
             getProductsByClick: function (e) {
                 getProducts(e.target.innerText)
+                showButtons()
             },
             deleteCat: function (e) {
                 $.ajax({
@@ -172,7 +184,8 @@ $(function () {
                 e.preventDefault()
                 var data = {
                     name: $('#addIngForm input.name').val().trim(),
-                    price: $('#addIngForm input.price').val().trim(),
+                    priceDollars: $('#addIngForm input.priceDollars').val().trim(),
+                    priceCents: $('#addIngForm input.priceCents').val().trim(),
                     categories: $('.ingCatToAddBtn.active').map(function () { return $(this).text().trim()}).get()
                 }
 
@@ -240,6 +253,8 @@ $(function () {
                 })
             },
             deleteTagFromProduct: function (e) {
+                if(vueData.topProducts==true)
+                    return
                 var tagName = $(e.target).parent().attr('data-name').trim()
                 var productName = $(e.target).parents('div.product')
                     .find('h5.name').text().trim()
@@ -256,6 +271,8 @@ $(function () {
                 })
             },
             deleteIngredientFromProduct: function (e) {
+                if(vueData.topProducts==true)
+                    return
                 var IngName = $(e.target).parent().attr('data-name').trim()
                 var productName = $(e.target).parents('div.product')
                     .find('h5.name').text().trim()
@@ -367,6 +384,7 @@ $(function () {
                     type: 'get',
                     success: function (data) {
                         vueData.products = data
+                        hideButtons()
                     },
                     error: function (jqXHR, status, errorThrown) {
                         raisePopup('ERROR: ' + jqXHR.responseText,'danger')

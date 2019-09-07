@@ -21,8 +21,8 @@
     <form:form id="addCatForm" modelAttribute="categoryDto" enctype="multipart/form-data">
         <table>
             <tr>
-                <td><form:input path="name" type="text" placeholder="Category name"/></td>
-                <td><form:input path="files" type="file" lang="en"/></td>
+                <td><form:input required="" path="name" type="text" placeholder="Category name"/></td>
+                <td><form:input required="" path="files" type="file" lang="en"/></td>
                 <td>
                     <button type="button" @click="addCategory" class="btn btn-primary">Add</button>
                 </td>
@@ -39,8 +39,9 @@
     <form:form id="addIngForm" modelAttribute="ingredientDto" enctype="multipart/form-data">
         <table>
             <tr>
-                <td><form:input class="name" path="name" type="text" placeholder="Name"/></td>
-                <td><form:input class="price" path="price" type="number" placeholder="Price"/></td>
+                <td><form:input required="" class="name" path="name" type="text" placeholder="Name"/></td>
+                <td><form:input cssStyle="width: 120px" required="" min="0" class="priceDollars" path="priceDollars" type="number" placeholder="Price (Dollars)"/></td>
+                <td><form:input cssStyle="width: 115px" required="" min="0" max="100" class="priceCents" path="priceCents" type="number" placeholder="Price (Cents)"/></td>
                 <td>
                     <button type="button" @click="addIng" class="btn btn-primary">Add</button>
                 </td>
@@ -62,7 +63,7 @@
     <form:form id="addTagForm" modelAttribute="tagDto" enctype="multipart/form-data">
         <table>
             <tr>
-                <td><form:input path="name" type="text" placeholder="Name"/></td>
+                <td><form:input required="" path="name" type="text" placeholder="Name"/></td>
                 <td>
                     <button type="button" @click="addTag" class="btn btn-primary">Add</button>
                 </td>
@@ -84,17 +85,17 @@
             <h5 v-if="product.isCustom == false">Spicy:{{product.spicy}}</h5>
             <h5 v-if="product.isCustom == false">Tags:
                 <div v-for="tag in product.tags" :data-name="tag.name">{{tag.name}}
-                    <button  @click="deleteTagFromProduct" class="btn btn-primary btn-danger">&times;</button>
+                    <button  @click="deleteTagFromProduct" class="topHide btn btn-primary btn-danger">&times;</button>
                 </div>
             </h5>
             <h5>Ingredients:
                 <div v-for="ingredient in product.ingredients" :data-name="ingredient.name">{{ingredient.name}}
-                    <button v-if="product.isCustom == false" @click="deleteIngredientFromProduct" class="btn btn-primary btn-danger">&times;</button>
+                    <button v-if="product.isCustom == false" @click="deleteIngredientFromProduct" class="topHide btn btn-primary btn-danger">&times;</button>
                 </div>
             </h5>
-            <button v-if="product.isCustom == false" @click="editProduct" class="btn btn-primary">Edit</button>
+            <button v-if="product.isCustom == false" @click="editProduct" class="btn btn-primary topHide">Edit</button>
         </div>
-        <div class="product">
+        <div class="product topHide">
             <button @click="addProduct" class="btn btn-primary" style="margin: auto;">Add Product</button>
         </div>
     </div>
@@ -104,20 +105,23 @@
         <form:form id="editProductForm" modelAttribute="productDto" enctype="multipart/form-data">
             <div class="wrapper">
                 <div>
-                    <form:input path="name" type="text" placeholder="Rename"></form:input>
+                    <form:input required="" path="name" type="text" placeholder="Rename"></form:input>
                 </div>
                 <div>
-                    <form:input path="price" type="number" placeholder="Change price"></form:input>
+                    <form:input required="" min="0" path="priceDollars" type="number" placeholder="Price (Dollars)"></form:input>
                 </div>
                 <div>
-                    <form:input cssStyle="width: 205px" path="spicy" type="number" min="0" max="3"
+                    <form:input required="" cssStyle="width: 205px" min="0" max="100" path="priceCents" type="number" placeholder="Price (cents)"></form:input>
+                </div>
+                <div>
+                    <form:input required="" cssStyle="width: 205px" path="spicy" type="number" min="0" max="3"
                                 placeholder="Change spicy"></form:input>
                 </div>
                 <div>
                     <label for="filesEditProduct">Change image:</label>
                 </div>
                 <div>
-                    <form:input id="filesEditProduct" path="files" type="file"></form:input>
+                    <form:input required="" id="filesEditProduct" path="files" type="file"></form:input>
                 </div>
                 <div>Add tags:</div>
                 <div>

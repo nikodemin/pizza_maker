@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,14 +36,6 @@ public class ProductService {
 
     @PostConstruct
     private void init(){
-        TypeMap<AbstractProduct,ProductDto> toProductDtoTM;
-                try {
-                    toProductDtoTM = modelMapper.createTypeMap(AbstractProduct.class,ProductDto.class);
-                }catch (IllegalStateException e) {
-                    toProductDtoTM = modelMapper.getTypeMap(AbstractProduct.class,ProductDto.class);
-                }
-        toProductDtoTM.addMapping(src->src instanceof CustomProduct,ProductDto::setIsCustom);
-
         Converter<ProductDto,CustomProduct> toCustomProductConverter = new AbstractConverter<ProductDto, CustomProduct>() {
             @Override
             protected CustomProduct convert(ProductDto productDto) {
@@ -220,7 +211,11 @@ public class ProductService {
 
     public List<ProductDto> getProductDtosByCategoryAndUser(String category, String username) {
         return productDao.getProductsByCatAndUser(categoryDao.getCategory(category), userDao.getUser(username))
-                .stream().map(p->modelMapper.map(p,ProductDto.class)).collect(Collectors.toList());
+                .stream().map(p->{
+                    ProductDto productDto = modelMapper.map(p,ProductDto.class);
+                    productDto.setIsCustom(true);
+                    return productDto;
+                }).collect(Collectors.toList());
     }
 
     public List<ProductDto> getProductDtosWithTags(String category, List<TagDto> tags) {

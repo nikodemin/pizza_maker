@@ -4,14 +4,49 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
-      xmlns:p="http://primefaces.org/ui"
+      xmlns:o="http://omnifaces.org/ui"
+      xmlns:of="http://omnifaces.org/functions"
       xmlns:f="http://xmlns.jcp.org/jsf/core">
 <f:view>
+    <h:head>
+        <title>Advertising stand</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+              integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"/>
+        <h:outputStylesheet library="css" name="main.css"/>
+    </h:head>
     <h:body>
-        Hello world!
-        <h:form>
-            <h:commandButton action="#{jmsTest.send()}" value="Send!"/>
-        </h:form>
+        <header><a href="http://localhost:8080/webstore_war/">Try out our Leaders!</a></header>
+        <div id="app">
+            <div class="products">
+                <div v-for="product in products" class="productItem card">
+                    <div class="hot">
+                        <i v-for="hot in product.spicy" class="fas fa-pepper-hot"></i>
+                    </div>
+                    <img class="card-img-top"/>
+                    <div class="card-body">
+                        <h4 class="card-title productName">{{product.name}}</h4>
+                        <h5>{{calcPrice(product.price)}} $</h5>
+                        <p class="card-text">
+                            <template v-for="ingredient in product.subListIngredients">
+                                {{ingredient.name}},
+                            </template>
+                            <template>{{product.lastIngredient.name}}</template>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://kit.fontawesome.com/c08c803562.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+                integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+                crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+                integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+                crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+        <h:outputScript library="js" name="main.js"/>
     </h:body>
+    <o:socket channel="topProducts" onmessage="socketListener"/>
 </f:view>
 </html>
