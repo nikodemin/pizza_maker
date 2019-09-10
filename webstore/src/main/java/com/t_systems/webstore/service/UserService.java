@@ -34,21 +34,40 @@ public class UserService implements UserDetailsService {
     private final UserDao userDao;
     private final ModelMapper modelMapper;
 
+    /**
+     * find user
+     * @param username username
+     * @return user
+     */
     @Transactional(readOnly = true)
     public User findUser(String username) {
         return userDao.getUser(username);
     }
 
+    /**
+     * find user by email
+     * @param email user email
+     * @return user
+     */
     @Transactional(readOnly = true)
     public User findUserByEmail(String email) {
         return userDao.getUserByEmail(email);
     }
 
+    /**
+     * get all users
+     * @return list of users
+     */
     @Transactional(readOnly = true)
     public List<User> getAllUsers() {
         return userDao.getAllUsers();
     }
 
+    /**
+     * add user
+     * @param user user
+     * @throws UserExistsException ex
+     */
     @Transactional
     public void addUser(User user) throws UserExistsException {
         if (!userDao.existUserByNameOrByEmail(user.getEmail(), user.getUsername())) {
@@ -59,6 +78,12 @@ public class UserService implements UserDetailsService {
         throw new UserExistsException(user.getUsername(),user.getEmail());
     }
 
+    /**
+     * change user
+     * @param username username
+     * @param userDto user dto
+     * @throws ParseException ex
+     */
     @Transactional
     public void changeUser(String username, UserDto userDto) throws ParseException {
         User user = userDao.getUser(username);
@@ -75,6 +100,12 @@ public class UserService implements UserDetailsService {
         userDao.updateUser(user);
     }
 
+    /**
+     * get user details for spring security
+     * @param username username
+     * @return user details
+     * @throws UsernameNotFoundException ex
+     */
     @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -122,6 +153,11 @@ public class UserService implements UserDetailsService {
         throw new UsernameNotFoundException("User not found");
     }
 
+    /**
+     * add user
+     * @param userDto user dto
+     * @throws UserExistsException ex
+     */
     @Transactional
     public void addUser(UserDto userDto) throws UserExistsException {
         Address address = modelMapper.map(userDto, Address.class);
@@ -131,6 +167,10 @@ public class UserService implements UserDetailsService {
         addUser(user);
     }
 
+    /**
+     * PasswordEncoder config
+     * @return PasswordEncoder
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

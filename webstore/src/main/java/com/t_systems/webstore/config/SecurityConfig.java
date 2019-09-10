@@ -15,6 +15,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserDetailsService userService;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * set userDetailsService and passwordEncoder
+     * @param auth AuthenticationManagerBuilder
+     * @throws Exception ex
+     */
     @Autowired
     public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
 

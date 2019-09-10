@@ -25,6 +25,10 @@ import java.util.Properties;
 public class JpaConfig {
     private final Environment env;
 
+    /**
+     * Data source config
+     * @return data source
+     */
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -35,16 +39,28 @@ public class JpaConfig {
         return dataSource;
     }
 
+    /**
+     * transactionManager config
+     * @return transactionManager
+     */
     @Bean
     public PlatformTransactionManager transactionManager() {
         return new JpaTransactionManager(entityManagerFactory());
     }
 
+    /**
+     * jpaVendorAdapter config
+     * @return jpaVendorAdapter
+     */
     @Bean
     public JpaVendorAdapter jpaVendorAdapter() {
         return new HibernateJpaVendorAdapter();
     }
 
+    /**
+     * hibernateProperties config
+     * @return hibernateProperties
+     */
     @Bean
     public Properties hibernateProperties() {
         Properties hibernateProp = new Properties();
@@ -58,6 +74,10 @@ public class JpaConfig {
         return hibernateProp;
     }
 
+    /**
+     * entityManagerFactory config
+     * @return entityManagerFactory
+     */
     @Bean
     public EntityManagerFactory entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean factoryBean =
@@ -70,6 +90,10 @@ public class JpaConfig {
         return factoryBean.getNativeEntityManagerFactory();
     }
 
+    /**
+     * modelMapper config
+     * @return modelMapper
+     */
     @Bean
     ModelMapper modelMapper() {
         return new ModelMapper();

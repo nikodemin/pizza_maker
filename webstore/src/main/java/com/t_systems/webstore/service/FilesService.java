@@ -21,6 +21,12 @@ public class FilesService {
     @Value("${server.uploadDir}")
     private String UPLOAD_DIR;
 
+    /**
+     * save files to uploads
+     * @param files CommonsMultipartFile array
+     * @return list of paths to files
+     * @throws IOException ex
+     */
     public List<String> saveUploadedFiles(CommonsMultipartFile[] files) throws IOException {
         // Make sure directory exists!
         File uploadDir = new File(UPLOAD_DIR);

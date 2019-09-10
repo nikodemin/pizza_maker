@@ -7,6 +7,7 @@ import com.t_systems.webstore.model.dto.UserDto;
 import com.t_systems.webstore.service.UserService;
 import com.t_systems.webstore.validator.UserValidator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +26,7 @@ import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
+@Log4j
 public class UserController {
     private final UserService userService;
     private final UserValidator validator;
@@ -39,12 +41,24 @@ public class UserController {
             binder.setValidator(validator);
     }
 
+    /**
+     * get registration page
+     * @param model model
+     * @return page name
+     */
     @GetMapping("/register")
     public String getRegisterPage(Model model) {
         model.addAttribute("form", new UserDto());
         return "register";
     }
 
+    /**
+     * process registration
+     * @param model model
+     * @param userDto user data
+     * @param result binding result
+     * @return login page name
+     */
     @PostMapping("/register")
     public String processRegistration(Model model,
                                       @Validated @ModelAttribute("form") UserDto userDto,
@@ -55,30 +69,52 @@ public class UserController {
         try {
             userService.addUser(userDto);
         } catch (UserExistsException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(),e);
             return "register";
         }
 
         return "redirect:/login";
     }
 
+    /**
+     * get cart page
+     * @param model model
+     * @param session session
+     * @return page name
+     */
     @GetMapping("/cart")
     public String getCartPage(Model model, HttpSession session) {
         model.addAttribute("cart", session.getAttribute("cart"));
         return "cart";
     }
 
+    /**
+     * get login page
+     * @return page name
+     */
     @GetMapping("/login")
     public String getLoginPage(){
         return "login";
     }
 
+    /**
+     * logout
+     * @param request httpServletRequest
+     * @return login page name
+     * @throws ServletException servlet exception
+     */
     @GetMapping("/logout")
     public String getAfterLogoutPage(HttpServletRequest request) throws ServletException {
         request.logout();
         return "redirect:/login";
     }
 
+    /**
+     * get payment page
+     * @param model model
+     * @param principal principal
+     * @return page name
+     */
     @GetMapping("/payment")
     public String getPaymentPage(Model model, Principal principal){
         model.addAttribute("card",new CardDto());
@@ -88,12 +124,21 @@ public class UserController {
         return "payment";
     }
 
+    /**
+     * get confirmation page
+     * @param model model
+     * @return page name
+     */
     @GetMapping("/confirmation")
     public String getConfirmationPage(Model model){
         model.addAttribute("text","Order accepted! Wait for phone call!");
         return "text";
     }
 
+    /**
+     * get custom product page
+     * @return page name
+     */
     @GetMapping("/customProduct")
     public String getCustomProductPage(){
         return "customProduct";

@@ -15,6 +15,12 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
 
+    /**
+     * get orders page
+     * @param model model
+     * @param principal principal
+     * @return page name
+     */
     @GetMapping("/orders")
     public String getOrdersPage(Model model, Principal principal){
         List<OrderDto> orders = orderService.getOrderDtosByUser(principal.getName());

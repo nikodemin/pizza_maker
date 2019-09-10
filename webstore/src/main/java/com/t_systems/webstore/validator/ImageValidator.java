@@ -10,11 +10,21 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 @Component
 public class ImageValidator implements Validator {
 
+    /**
+     * supported classes
+     * @param aClass target class
+     * @return boolean: class supported or not
+     */
     @Override
     public boolean supports(Class<?> aClass) {
         return aClass == CategoryDto.class || aClass == ProductDto.class;
     }
 
+    /**
+     * validate image
+     * @param o image dto
+     * @param errors errors
+     */
     @Override
     public void validate(Object o, Errors errors) {
         CommonsMultipartFile[] files = null;

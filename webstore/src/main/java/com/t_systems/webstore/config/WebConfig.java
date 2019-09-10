@@ -15,18 +15,25 @@ import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @ComponentScan("com.t_systems.webstore")
-//todo this annotation makes tests fail
 @EnableWebMvc
 @SuppressWarnings("deprecation")
 public class WebConfig extends WebMvcConfigurerAdapter {
     @Autowired
     SessionInterceptor sessionInterceptor;
 
+    /**
+     * DefaultServletHandlerConfigurer enable
+     * @param configurer DefaultServletHandlerConfigurer
+     */
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
     }
 
+    /**
+     * MultipartResolver config
+     * @return MultipartResolver
+     */
     @Bean(name = "multipartResolver")
     public MultipartResolver getMultipartResolver() {
         CommonsMultipartResolver resover = new CommonsMultipartResolver();
@@ -34,6 +41,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return resover;
     }
 
+    /**
+     * InternalResourceViewResolver config
+     * @return InternalResourceViewResolver
+     */
     @Bean
     public InternalResourceViewResolver getInternalResourceViewResolver() {
         InternalResourceViewResolver resolver = new InternalResourceViewResolver();
@@ -44,6 +55,10 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return resolver;
     }
 
+    /**
+     * MessageSource config
+     * @return MessageSource
+     */
     @Bean
     public MessageSource messageSource() {
         ResourceBundleMessageSource resource = new ResourceBundleMessageSource();
@@ -52,11 +67,19 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         return resource;
     }
 
+    /**
+     * Interceptors
+     * @param registry InterceptorRegistry
+     */
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(sessionInterceptor).addPathPatterns("/**");
     }
 
+    /**
+     * Resource handlers
+     * @param registry ResourceHandlerRegistry
+     */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**")

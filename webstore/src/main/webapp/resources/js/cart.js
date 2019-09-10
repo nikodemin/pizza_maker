@@ -117,7 +117,7 @@ $(function () {
                 vueData.cardError = false
                 vueData.cardEmpty = false
 
-                $.ajax({
+                /*$.ajax({
                     url: baseUrl + '/isCartEmpty',
                     type: 'GET',
                     async: false,
@@ -131,7 +131,8 @@ $(function () {
                         raisePopup('ERROR: ' + jqXHR.responseText,'danger')
                         console.log('ERROR: ' + jqXHR.responseText)
                     }
-                })
+                })*/
+
 
                 if (vueData.cardEmpty)
                     return

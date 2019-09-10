@@ -17,6 +17,13 @@ public class FilesController {
     @Value("${server.uploadDir}")
     private String UPLOAD_DIR;
 
+    /**
+     * get image from server
+     * @param fileName filename
+     * @param ext file extension
+     * @return byte array containing image
+     * @throws IOException exception getting image file
+     */
     @GetMapping("/uploads/{file}.{ext}")
     @ResponseBody
     public byte[] getImage(@PathVariable(value = "file") String fileName,

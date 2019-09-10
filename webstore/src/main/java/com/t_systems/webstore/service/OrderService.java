@@ -85,6 +85,10 @@ public class OrderService {
         modelMapper.addConverter(toUserDtoConverter);
     }
 
+    /**
+     * add order
+     * @param order order
+     */
     public void addOrder(_Order order) {
         Integer sum = 0;
         for (AbstractProduct product:order.getItems()) {
@@ -94,19 +98,37 @@ public class OrderService {
         orderDao.addOrder(order);
     }
 
+    /**
+     * get all orders
+     * @return list of orders
+     */
     public List<_Order> getAllOrders() {
         return orderDao.getAllOrders();
     }
 
+    /**
+     * get recent orders
+     * @return list of orders
+     */
     public List<_Order> getRecentOrders() {
         return orderDao.getRecentOrders();
     }
 
+    /**
+     * change order status
+     * @param id id of order
+     * @param newStatus new status
+     */
     public void changeStatus(Long id, String newStatus) {
         OrderStatus status = toOrderStatus(newStatus);
         orderDao.changeStatus(id,status);
     }
 
+    /**
+     * convert string to OrderStatus
+     * @param status string
+     * @return OrderStatus
+     */
     public OrderStatus toOrderStatus(String status){
         OrderStatus res = null;
         switch (status)
@@ -124,16 +146,29 @@ public class OrderService {
         return res;
     }
 
+    /**
+     * get orders by user
+     * @param user username
+     * @return list of orders
+     */
     public List<OrderDto> getOrderDtosByUser(String user) {
         return orderDao.getOrdersByUser(userDao.getUser(user)).stream()
                 .map(o->modelMapper.map(o,OrderDto.class)).collect(Collectors.toList());
     }
 
+    /**
+     * get recent orders
+     * @return list of orders
+     */
     public List<OrderDto> getRecentOrderDtos() {
         return getRecentOrders().stream().map(o->modelMapper.map(o,OrderDto.class))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * get total gain
+     * @return total gain
+     */
     public TotalGainDto getTotalGainDto() {
         TotalGainDto res = new TotalGainDto();
         Integer forMonth = 0, forWeek = 0;
@@ -157,6 +192,10 @@ public class OrderService {
         return res;
     }
 
+    /**
+     * get top clients
+     * @return list of users
+     */
     public List<UserDto> getTopClients() {
         Map<User,Integer> map = new HashMap<>();
         for (_Order order:getRecentOrders()) {
@@ -171,6 +210,13 @@ public class OrderService {
                 .limit(TOP_CLIENTS_QUANTITY).map(e->modelMapper.map(e.getKey(),UserDto.class)).collect(Collectors.toList());
     }
 
+    /**
+     * add order
+     * @param orderDto order dto
+     * @param username username
+     * @param address address
+     * @param card card
+     */
     public void addOrder(OrderDto orderDto, String username, Address address, Card card) {
         _Order order = new _Order();
         order.setStatus(OrderStatus.UNPAID);

@@ -14,6 +14,14 @@ import java.util.ArrayList;
 
 @Component
 public class SessionInterceptor extends HandlerInterceptorAdapter {
+    /**
+     * interceptor for setting session attributes
+     * @param request request
+     * @param response response
+     * @param handler handler
+     * @return true
+     * @throws Exception ex
+     */
     @Override
     public boolean preHandle(HttpServletRequest request,
                              HttpServletResponse response,

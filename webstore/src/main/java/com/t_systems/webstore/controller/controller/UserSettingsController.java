@@ -50,6 +50,12 @@ public class UserSettingsController {
         modelMapper.addConverter(toUserDtoConverter);
     }
 
+    /**
+     * get settings page
+     * @param model model
+     * @param principal principal
+     * @return page name
+     */
     @GetMapping("/settings")
     public String getSettingsPage(Model model, Principal principal) {
         UserDto userDto = modelMapper.map(userService.findUser(principal.getName()),UserDto.class);
@@ -57,6 +63,17 @@ public class UserSettingsController {
         return "settings";
     }
 
+    /**
+     * change user settings
+     * @param model model
+     * @param userDto user data
+     * @param result binding result
+     * @param principal principal
+     * @param request HttpServletRequest
+     * @return page name
+     * @throws ParseException parsing exception
+     * @throws ServletException servlet exception
+     */
     @PostMapping("/changeSettings")
     public String changeSettings(Model model, @Valid @ModelAttribute("user") UserDto userDto,
                                  BindingResult result, Principal principal, HttpServletRequest request)

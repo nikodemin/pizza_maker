@@ -14,11 +14,21 @@ public class UserValidator implements Validator {
 
     private final UserService userService;
 
+    /**
+     * supported classes
+     * @param aClass target class
+     * @return boolean: class supported or not
+     */
     @Override
     public boolean supports(Class<?> aClass) {
         return aClass == UserDto.class;
     }
 
+    /**
+     * validate user
+     * @param o user dto
+     * @param errors errors
+     */
     @Override
     public void validate(Object o, Errors errors) {
         UserDto form = (UserDto) o;

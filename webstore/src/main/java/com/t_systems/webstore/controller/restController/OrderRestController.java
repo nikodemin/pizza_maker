@@ -27,11 +27,22 @@ public class OrderRestController {
     private Address address = null;
     private Card card = null;
 
+    /**
+     * get cart products
+     * @param session session
+     * @return list of product and its quantity
+     */
     @GetMapping("/getCartProducts")
     public List<TulipDto<ProductDto,Integer>> getCartProducts(HttpSession session){
         return ((OrderDto)session.getAttribute("order")).getUniqueProducts();
     }
 
+    /**
+     * set address
+     * @param addressDto address
+     * @param result binding result
+     * @return boolean: successful or not
+     */
     @PostMapping("/setAddress")
     public Boolean setAddress(@ModelAttribute("address") @Valid AddressDto addressDto, BindingResult result){
         if (result.hasErrors()) {
@@ -41,6 +52,12 @@ public class OrderRestController {
         return false;
     }
 
+    /**
+     * set card
+     * @param cardDto card
+     * @param result binding result
+     * @return boolean: successful or not
+     */
     @PostMapping("/setCard")
     public Boolean setCard(@ModelAttribute("card") @Valid CardDto cardDto, BindingResult result){
         if (result.hasErrors()) {
@@ -50,11 +67,23 @@ public class OrderRestController {
         return false;
     }
 
+    /**
+     * is cart empty
+     * @param session session
+     * @return boolean
+     */
     @GetMapping("/isCartEmpty")
     public Boolean isCartEmpty(HttpSession session){
         return ((OrderDto)session.getAttribute("order")).getItems().isEmpty();
     }
 
+    /**
+     * submit order
+     * @param session session
+     * @param principal principal
+     * @return response entity
+     * @throws Exception ex
+     */
     @PostMapping("/submitOrder")
     public ResponseEntity<?> submitOrder(HttpSession session, Principal principal) throws Exception{
         orderService.addOrder((OrderDto)session.getAttribute("order"), principal.getName(),address,card);
@@ -66,11 +95,21 @@ public class OrderRestController {
         return new ResponseEntity<>("Order submitted!", HttpStatus.OK);
     }
 
+    /**
+     * get recent orders
+     * @return list of orders
+     */
     @GetMapping("admin/getOrders")
     public List<OrderDto> getOrders(){
         return orderService.getRecentOrderDtos();
     }
 
+    /**
+     * change order status
+     * @param id id of order
+     * @param newStatus new order status
+     * @return response entity
+     */
     @PutMapping("admin/changeOrderStatus/{id}/{newStatus}")
     public ResponseEntity<?> changeOrderStatus(@PathVariable("id") Long id,
                                                @PathVariable("newStatus") String newStatus){
@@ -78,11 +117,19 @@ public class OrderRestController {
         return new ResponseEntity<>("Status changed!", HttpStatus.OK);
     }
 
+    /**
+     * get total gain
+     * @return total gain
+     */
     @GetMapping("admin/getTotalGain")
     public TotalGainDto getTotalGain(){
         return orderService.getTotalGainDto();
     }
 
+    /**
+     * get top clients
+     * @return list of users
+     */
     @GetMapping("admin/getTopClients")
     List<UserDto> getTopClients(){
         return orderService.getTopClients();

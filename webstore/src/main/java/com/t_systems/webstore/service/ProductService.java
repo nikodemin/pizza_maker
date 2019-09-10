@@ -4,6 +4,7 @@ import com.t_systems.webstore.dao.*;
 import com.t_systems.webstore.model.dto.*;
 import com.t_systems.webstore.model.entity.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Log4j
 public class ProductService {
     private static final int TOP_PRODUCTS_QUANTITY = 6;
     private static final long ADMIN_TOP_PRODUCTS_QUANTITY = 10;
@@ -33,6 +35,15 @@ public class ProductService {
     private final UserDao userDao;
     private final ModelMapper modelMapper;
     private final FilesService filesService;
+    private JavaMessageService javaMessageService;
+
+    /**
+     * resolver circular dependency by setting jms in JavaMessageService.init() method
+     * @param javaMessageService jms instance
+     */
+    public void setJavaMessageService(JavaMessageService javaMessageService){
+        this.javaMessageService = javaMessageService;
+    }
 
     @PostConstruct
     private void init(){
@@ -66,7 +77,7 @@ public class ProductService {
                 try {
                     image = filesService.saveUploadedFiles(productDto.getFiles());
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    log.error(e.getMessage(),e);
                 }
 
                 if (image.size() > 0) {
@@ -82,14 +93,27 @@ public class ProductService {
         modelMapper.addConverter(toCatalogProductConverter);
     }
 
+    /**
+     * add custom product
+     * @param product product
+     */
     public void addCustomProduct(AbstractProduct product) {
         productDao.addProduct(product);
     }
 
+    /**
+     * get products by category
+     * @param category category name
+     * @return list of CatalogProduct
+     */
     public List<CatalogProduct> getProductsByCategory(String category) {
         return productDao.getProductsByCat(category);
     }
 
+    /**
+     * get top products dto
+     * @return list of ProductDto
+     */
     public List<ProductDto> getTopProductsDto() {
         //get sorted products from last orders
         List<CatalogProduct> sortedProducts = orderDao.getRecentOrders().stream()
@@ -113,62 +137,124 @@ public class ProductService {
                 .limit(TOP_PRODUCTS_QUANTITY).map(e -> modelMapper.map(e.getKey(),ProductDto.class)).collect(Collectors.toList());
     }
 
+    /**
+     * add ingredient
+     * @param ingredient Ingredient
+     */
     public void addIngredient(Ingredient ingredient) {
         ingredientDao.addIngredient(ingredient);
     }
 
+    /**
+     * get all ingredients dto
+     * @return list of IngredientDto
+     */
     public List<IngredientDto> getAllIngredientDtos() {
         return ingredientDao.getAllIngredients().stream().map(e -> modelMapper.map(e,IngredientDto.class))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * remove ingredient
+     * @param name ingredient name
+     */
     public void removeIngredient(String name) {
         ingredientDao.removeIngredient(name);
     }
 
+    /**
+     * get ingredient
+     * @param name ingredient name
+     * @return Ingredient
+     */
     public Ingredient getIngredient(String name) {
         return ingredientDao.getIngredient(name);
     }
 
+    /**
+     * add tag
+     * @param tag Tag
+     */
     public void addTag(Tag tag) {
         tagDao.addTag(tag);
     }
 
+    /**
+     * get all tags
+     * @return list of Tag
+     */
     public List<Tag> getAllTags() {
         return tagDao.getAllTags();
     }
 
+    /**
+     * get tag dtos by category
+     * @param category category name
+     * @return list of TagDto
+     */
     public List<TagDto> getTagDtosByCategory(String category) {
         return tagDao.getTagsByCategory(category).stream()
                 .map(t->modelMapper.map(t, TagDto.class)).collect(Collectors.toList());
     }
 
+    /**
+     * remove tag
+     * @param name tag name
+     */
     public void removeTag(String name) {
         tagDao.removeTag(name);
     }
 
+    /**
+     * get tag
+     * @param name tag name
+     * @return Tag
+     */
     public Tag getTag(String name) {
         return tagDao.getTag(name);
     }
 
+    /**
+     * add category
+     * @param category category name
+     */
     public void addCategory(Category category) {
         categoryDao.addCategory(category);
     }
 
+    /**
+     * get all category dtos
+     * @return list of CategoryDto
+     */
     public List<CategoryDto> getAllCategoryDtos() {
         return categoryDao.getAllCategories().stream()
                 .map(c->modelMapper.map(c,CategoryDto.class)).collect(Collectors.toList());
     }
 
+    /**
+     * get category
+     * @param name category name
+     * @return Category
+     */
     public Category getCategory(String name) {
         return categoryDao.getCategory(name);
     }
 
+    /**
+     * add ingredient to product
+     * @param productName product name
+     * @param ingredient ingredient name
+     */
     public void addIngToProduct(String productName, String ingredient) {
         CatalogProduct product = ((CatalogProduct) productDao.getProduct(productName, null));
         productDao.addIngToProduct(product, ingredientDao.getIngredient(ingredient));
     }
 
+    /**
+     * detach and try to remove product
+     * @param productName product name
+     * @param username username
+     */
     public void detachOrRemoveProduct(String productName, String username) {
         AbstractProduct product = productDao.getProduct(productName,
                 username==null? null : userDao.getUser(username));
@@ -177,7 +263,11 @@ public class ProductService {
             productDao.removeProduct(product);
         }
     }
-    //todo check if this behavior is normal
+
+    /**
+     * remove category
+     * @param name category name
+     */
     public void removeCategory(String name) {
         Category category = categoryDao.getCategory(name);
         tagDao.removeCategory(category);
@@ -185,30 +275,62 @@ public class ProductService {
         categoryDao.removeCategory(name);
     }
 
+    /**
+     * remove ingredient from product
+     * @param productName product name
+     * @param ingredient ingredient name
+     */
     public void removeIngredientFromProduct(String productName, String ingredient) {
         CatalogProduct product = ((CatalogProduct) productDao.getProduct(productName, null));
         productDao.removeIngredientFromProduct(product, ingredientDao.getIngredient(ingredient));
     }
 
+    /**
+     * remove tag drom product
+     * @param productName product name
+     * @param tag tag name
+     */
     public void removeTagFromProduct(String productName, String tag) {
         CatalogProduct product = ((CatalogProduct) productDao.getProduct(productName, null));
         productDao.removeTagFromProduct(product, tagDao.getTag(tag));
     }
 
+    /**
+     * add tag to product
+     * @param productName product name
+     * @param tag tag name
+     */
     public void addTagToProduct(String productName, String tag) {
         CatalogProduct product = ((CatalogProduct) productDao.getProduct(productName, null));
         productDao.addTagToProduct(product, tagDao.getTag(tag));
     }
 
+    /**
+     * get product
+     * @param name product name
+     * @param username username
+     * @return product
+     */
     public AbstractProduct getProduct(String name, String username) {
         return productDao.getProduct(name, userDao.getUser(username));
     }
 
+    /**
+     * get ingredient dtos by category
+     * @param category category name
+     * @return list of ingredients
+     */
     public List<IngredientDto> getIngredientDtosByCategory(String category) {
         return ingredientDao.getIngredientsByCategory(categoryDao.getCategory(category)).stream()
                 .map(i->modelMapper.map(i,IngredientDto.class)).collect(Collectors.toList());
     }
 
+    /**
+     * get custom product dtos by category
+     * @param category category name
+     * @param username username
+     * @return list of products
+     */
     public List<ProductDto> getProductDtosByCategoryAndUser(String category, String username) {
         return productDao.getProductsByCatAndUser(categoryDao.getCategory(category), userDao.getUser(username))
                 .stream().map(p->{
@@ -218,6 +340,12 @@ public class ProductService {
                 }).collect(Collectors.toList());
     }
 
+    /**
+     * get product dtos with specified tags
+     * @param category category name
+     * @param tags list of tag dtos
+     * @return list of products
+     */
     public List<ProductDto> getProductDtosWithTags(String category, List<TagDto> tags) {
         return getProductsByCategory(category).stream()
                 .filter(product->{
@@ -232,11 +360,20 @@ public class ProductService {
                 .map(p->modelMapper.map(p,ProductDto.class)).collect(Collectors.toList());
     }
 
+    /**
+     * get product dtos by category
+     * @param category categoory name
+     * @return list of products
+     */
     public List<ProductDto> getProductDtosByCategory(String category) {
         return getProductsByCategory(category).stream()
                 .map(p->modelMapper.map(p,ProductDto.class)).collect(Collectors.toList());
     }
 
+    /**
+     * set price to product dto
+     * @param productDto product
+     */
     public void setPrice(ProductDto productDto) {
         Integer total = 0;
         for (IngredientDto i:productDto.getIngredients()) {
@@ -245,11 +382,19 @@ public class ProductService {
         productDto.setPrice(total);
     }
 
+    /**
+     * get all tag dtos
+     * @return list of tags
+     */
     public List<TagDto> getAllTagDtos() {
         return getAllTags().stream().map(t -> modelMapper.map(t, TagDto.class))
                 .collect(Collectors.toList());
     }
 
+    /**
+     * get top product dtos with custom products
+     * @return list of products
+     */
     public List<ProductDto> getTopProductsDtoForAdmin() {
         //get sorted products from last orders
         List<AbstractProduct> sortedProducts = orderDao.getRecentOrders().stream()
@@ -278,11 +423,22 @@ public class ProductService {
                 }).collect(Collectors.toList());
     }
 
+    /**
+     * is custom or catalog product exists
+     * @param name product name
+     * @param username username
+     * @return boolean: exists or not
+     */
     public boolean isCatalogProductOrCustomProductExists(String name, String username) {
         return productDao.isCatalogProductExists(name) ||
                 productDao.isCustomProductExists(name,userDao.getUser(username));
     }
 
+    /**
+     * remove product from cart
+     * @param session session
+     * @param product product name
+     */
     public void removeProductFromCart(HttpSession session, String product) {
         OrderDto order = (OrderDto)session.getAttribute("order");
         List<ProductDto> products = order.getItems().stream()
@@ -291,18 +447,32 @@ public class ProductService {
         session.setAttribute("order",order);
     }
 
+    /**
+     * add custom product
+     * @param productDto product dto
+     * @param username username
+     */
     public void addCustomProduct(ProductDto productDto, String username) {
         CustomProduct product = modelMapper.map(productDto,CustomProduct.class);
         product.setAuthor(userDao.getUser(username));
         productDao.addProduct(product);
     }
 
+    /**
+     * add category
+     * @param categoryDto category dto
+     * @param path path to image
+     */
     public void addCategory(CategoryDto categoryDto, String path) {
         Category category = modelMapper.map(categoryDto,Category.class);
         category.setImage(path);
         categoryDao.addCategory(category);
     }
 
+    /**
+     * add ingredient
+     * @param ingredientDto ingredient dto
+     */
     public void addIngredient(IngredientDto ingredientDto) {
         Ingredient ingredient = modelMapper.map(ingredientDto, Ingredient.class);
         ingredient.setCategories(ingredientDto.getCategories().stream()
@@ -310,6 +480,10 @@ public class ProductService {
         ingredientDao.addIngredient(ingredient);
     }
 
+    /**
+     * add tag
+     * @param tagDto tag dto
+     */
     public void addTag(TagDto tagDto) {
         List<Category> categories = tagDto.getCategories().stream()
                 .map(this::getCategory).collect(Collectors.toList());
@@ -319,12 +493,23 @@ public class ProductService {
         tagDao.addTag(tag);
     }
 
+    /**
+     * add catalog product
+     * @param productDto product dto
+     * @param category category name
+     */
     public void addProduct(ProductDto productDto, String category) {
         CatalogProduct product = modelMapper.map(productDto,CatalogProduct.class);
         product.setCategory(getCategory(category));
         productDao.addProduct(product);
     }
 
+    /**
+     * update existing product
+     * @param productName product name
+     * @param productDto product dto
+     * @throws IOException ex
+     */
     public void updateProduct(String productName, ProductDto productDto) throws IOException {
         CatalogProduct product = ((CatalogProduct) getProduct(productName, null));
 
@@ -345,5 +530,6 @@ public class ProductService {
         }
 
         productDao.updateProduct(product);
+        javaMessageService.sendTopProducts();
     }
 }
