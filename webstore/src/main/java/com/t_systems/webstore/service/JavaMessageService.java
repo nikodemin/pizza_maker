@@ -29,9 +29,7 @@ public class JavaMessageService {
         jmsTemplate().convertAndSend("webstore_top_products",text);
     }
 
-    /**
-     * send top products to mq topic
-     */
+
     public void sendTopProducts(){
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -41,20 +39,14 @@ public class JavaMessageService {
         }
     }
 
-    /**
-     * ActiveMQConnectionFactory config
-     * @return ActiveMQConnectionFactory
-     */
+
     @Bean
     public ActiveMQConnectionFactory connectionFactory(){
         ActiveMQConnectionFactory connectionFactory = new ActiveMQConnectionFactory("tcp://localhost:61616");
         return connectionFactory;
     }
 
-    /**
-     * JmsTemplate config
-     * @return JmsTemplate
-     */
+
     @Bean
     public JmsTemplate jmsTemplate(){
         JmsTemplate jmsTemplate = new JmsTemplate(connectionFactory());

@@ -42,7 +42,7 @@ public class ProductService {
      * @param javaMessageService jms instance
      */
     public void setJavaMessageService(JavaMessageService javaMessageService){
-        this.javaMessageService = javaMessageService;
+       this.javaMessageService = javaMessageService;
     }
 
     @PostConstruct

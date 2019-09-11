@@ -34,7 +34,8 @@
         <jackson.version>2.9.9</jackson.version>
         <mockito.version>2.0.2-beta</mockito.version>
         <jms.version>5.1.9.RELEASE</jms.version>
-        <activemq.version>5.15.9</activemq.version>
+        <activemq.version>5.7.0</activemq.version>
+        <log4j.version>1.2.17</log4j.version>
     </properties>
 
     <build>
@@ -224,10 +225,16 @@
             <artifactId>spring-jms</artifactId>
             <version>${jms.version}</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.apache.activemq/activemq-all -->
+        <!-- https://mvnrepository.com/artifact/log4j/log4j -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.activemq/activemq-core -->
         <dependency>
             <groupId>org.apache.activemq</groupId>
-            <artifactId>activemq-all</artifactId>
+            <artifactId>activemq-core</artifactId>
             <version>${activemq.version}</version>
         </dependency>
     </dependencies>

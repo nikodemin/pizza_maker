@@ -1,13 +1,17 @@
 package com.t_systems.webstore.model.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Table;
 
 @Embeddable
 @Table(name = "address")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class Address {
     private String country;
     private String city;

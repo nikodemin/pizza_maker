@@ -1,12 +1,16 @@
 package com.t_systems.webstore.model.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Table;
 
 @Embeddable
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Table(name="card")
 public class Card{
     private String cardNumber;
