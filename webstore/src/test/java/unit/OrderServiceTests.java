@@ -114,7 +114,7 @@ public class OrderServiceTests {
         Assert.assertEquals(orders.size(),21);
 
         when(orderService.getRecentOrders()).thenReturn(orders);
-        orderService.getTopClients();
+        orderService.getTopClientsDtos();
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         verify(modelMapper,times(10)).map(userArgumentCaptor.capture(),anyObject());
         for (int i = 0; i < 10; i++) {

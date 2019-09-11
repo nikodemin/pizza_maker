@@ -1,6 +1,6 @@
 package com.t_systems.webstore.exceptionHandelrs;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice(basePackages = {"com.t_systems.webstore.controller.restController"})
-@Log4j
+@Log4j2
 public class GlobalDefaultRestExceptionHandler {
     /**
      * global exception handler for REST

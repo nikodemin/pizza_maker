@@ -7,7 +7,7 @@ import com.t_systems.webstore.model.dto.UserDto;
 import com.t_systems.webstore.service.UserService;
 import com.t_systems.webstore.validator.UserValidator;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +26,7 @@ import java.security.Principal;
 
 @Controller
 @RequiredArgsConstructor
-@Log4j
+@Log4j2
 public class UserController {
     private final UserService userService;
     private final UserValidator validator;

@@ -1,8 +1,6 @@
 package com.t_systems.webstore.model.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -10,9 +8,7 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @Inheritance(strategy = InheritanceType.JOINED)
 public class AbstractProduct extends AbstractEntity {
     private Integer price;

@@ -106,6 +106,8 @@ div.tags button {
 div.products div.productItem {
     width: 33%;
     min-width: 210px;
+    max-width: 262px;
+    margin: 2px;
 }
 
 footer {

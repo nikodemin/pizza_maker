@@ -18,7 +18,8 @@
     </div>
     <div class="float-right col-md-9">
         <div class="ingredients">
-            <h4>Ingredients:</h4><button v-for="ing in ingredients" @click="addIngredient" class="btn btn-primary ml-3 mt-1">{{ing.name}} {{calcPrice(ing.price)}}$</button>
+            <h4>Ingredients:</h4>
+            <div><button v-for="ing in ingredients" @click="addIngredient" class="btn btn-primary ml-3 mt-1">{{ing.name}} {{calcPrice(ing.price)}}$</button></div>
         </div>
         <div v-if="error!=null" class="alert alert-danger">{{error}}</div>
         <div class="nameInput mt-3">

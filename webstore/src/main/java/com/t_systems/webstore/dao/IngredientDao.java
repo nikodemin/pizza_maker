@@ -13,7 +13,6 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class IngredientDao {
-
     private final ProductDao productDao;
     @PersistenceContext
     private EntityManager em;
@@ -51,7 +50,7 @@ public class IngredientDao {
         List<Ingredient> ingredients = getIngredientsByCategory(category);
         for (int i = 0; i < ingredients.size(); i++) {
             ingredients.get(i).getCategories().remove(category);
-            em.persist(ingredients.get(i));
+            em.merge(ingredients.get(i));
         }
         em.flush();
     }

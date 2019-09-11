@@ -1,5 +1,6 @@
 package com.t_systems.webstore.service;
 
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Log4j2
 @Service
 @PropertySource("classpath:server.properties")
 public class FilesService {
@@ -28,6 +30,7 @@ public class FilesService {
      * @throws IOException ex
      */
     public List<String> saveUploadedFiles(CommonsMultipartFile[] files) throws IOException {
+        log.trace("Saving uploaded files");
         // Make sure directory exists!
         File uploadDir = new File(UPLOAD_DIR);
         uploadDir.mkdirs();

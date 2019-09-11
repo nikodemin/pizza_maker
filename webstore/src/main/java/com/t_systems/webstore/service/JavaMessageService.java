@@ -3,7 +3,7 @@ package com.t_systems.webstore.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +15,7 @@ import javax.annotation.PostConstruct;
 @Service
 @Configuration
 @RequiredArgsConstructor
-@Log4j
+@Log4j2
 public class JavaMessageService {
     private final ProductService productService;
 
@@ -31,9 +31,10 @@ public class JavaMessageService {
 
 
     public void sendTopProducts(){
+        log.trace("Sending top products to mq");
         ObjectMapper mapper = new ObjectMapper();
         try {
-            sendMessage(mapper.writeValueAsString(productService.getTopProductsDto()));
+            sendMessage(mapper.writeValueAsString(productService.getTopProductDtos()));
         } catch (JsonProcessingException e) {
             log.error(e.getMessage(),e);
         }

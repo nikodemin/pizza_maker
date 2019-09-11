@@ -10,7 +10,6 @@ import java.util.List;
 
 @Repository
 public class CategoryDao {
-
     @Autowired
     private ProductDao productDao;
     @PersistenceContext

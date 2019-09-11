@@ -1,8 +1,6 @@
 package com.t_systems.webstore.model.entity;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -14,9 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "ingredient")
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public class Ingredient extends AbstractEntity{
     @Column(unique = true, nullable = false)
     private String name;

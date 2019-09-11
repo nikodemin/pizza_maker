@@ -7,6 +7,7 @@ import com.t_systems.webstore.model.entity.Address;
 import com.t_systems.webstore.model.entity.User;
 import com.t_systems.webstore.model.enums.UserRole;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 @Configuration
@@ -41,6 +43,7 @@ public class UserService implements UserDetailsService {
      */
     @Transactional(readOnly = true)
     public User findUser(String username) {
+        log.trace("Getting user by username");
         return userDao.getUser(username);
     }
 
@@ -51,6 +54,7 @@ public class UserService implements UserDetailsService {
      */
     @Transactional(readOnly = true)
     public User findUserByEmail(String email) {
+        log.trace("Getting user by email");
         return userDao.getUserByEmail(email);
     }
 
@@ -60,6 +64,7 @@ public class UserService implements UserDetailsService {
      */
     @Transactional(readOnly = true)
     public List<User> getAllUsers() {
+        log.trace("Getting all users");
         return userDao.getAllUsers();
     }
 
@@ -70,6 +75,7 @@ public class UserService implements UserDetailsService {
      */
     @Transactional
     public void addUser(User user) throws UserExistsException {
+        log.trace("Adding new user");
         if (!userDao.existUserByNameOrByEmail(user.getEmail(), user.getUsername())) {
             user.setPassword(passwordEncoder().encode(user.getPassword()));
             userDao.addUser(user);
@@ -86,6 +92,7 @@ public class UserService implements UserDetailsService {
      */
     @Transactional
     public void changeUser(String username, UserDto userDto) throws ParseException {
+        log.trace("Changing existing user");
         User user = userDao.getUser(username);
         Address address = modelMapper.map(userDto, Address.class);
         user.setAddress(address);
@@ -109,6 +116,7 @@ public class UserService implements UserDetailsService {
     @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.trace("Getting user by username for UserDetailsService");
         User user = userDao.getUser(username);
         if (user != null) {
             return new UserDetails() {
@@ -160,6 +168,7 @@ public class UserService implements UserDetailsService {
      */
     @Transactional
     public void addUser(UserDto userDto) throws UserExistsException {
+        log.trace("Adding new user from user dto");
         Address address = modelMapper.map(userDto, Address.class);
         User user = modelMapper.map(userDto, User.class);
         user.setRole(UserRole.USER);

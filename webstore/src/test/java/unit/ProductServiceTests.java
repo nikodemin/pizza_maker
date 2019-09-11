@@ -76,7 +76,7 @@ public class ProductServiceTests {
 
         when(orderDao.getRecentOrders()).thenReturn(orders);
 
-        productService.getTopProductsDto();
+        productService.getTopProductDtos();
         ArgumentCaptor<AbstractProduct> abstractProductArgumentCaptor =
                 ArgumentCaptor.forClass(AbstractProduct.class);
         verify(modelMapper,times(2))

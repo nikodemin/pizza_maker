@@ -1,9 +1,7 @@
 package com.t_systems.webstore.model.entity;
 
 import com.t_systems.webstore.model.enums.UserRole;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -13,9 +11,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "users")
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public class User extends AbstractEntity {
     private String firstName;
     private String lastName;

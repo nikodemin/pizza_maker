@@ -1,6 +1,6 @@
 package com.t_systems.webstore.exceptionHandelrs;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.Model;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice(basePackages = {"com.t_systems.webstore.controller.controller",
         "com.t_systems.webstore.service"})
-@Log4j
+@Log4j2
 public class GlobalDefaultExceptionHandler {
     /**
      * global exception handler

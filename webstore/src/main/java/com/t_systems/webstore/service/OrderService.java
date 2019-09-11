@@ -12,6 +12,7 @@ import com.t_systems.webstore.model.enums.DeliveryMethod;
 import com.t_systems.webstore.model.enums.OrderStatus;
 import com.t_systems.webstore.model.enums.PaymentMethod;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -90,6 +92,7 @@ public class OrderService {
      * @param order order
      */
     public void addOrder(_Order order) {
+        log.trace("Adding new order");
         Integer sum = 0;
         for (AbstractProduct product:order.getItems()) {
             sum += product.getPrice();
@@ -103,6 +106,7 @@ public class OrderService {
      * @return list of orders
      */
     public List<_Order> getAllOrders() {
+        log.trace("Getting all orders");
         return orderDao.getAllOrders();
     }
 
@@ -111,6 +115,7 @@ public class OrderService {
      * @return list of orders
      */
     public List<_Order> getRecentOrders() {
+        log.trace("Getting recent orders");
         return orderDao.getRecentOrders();
     }
 
@@ -120,6 +125,7 @@ public class OrderService {
      * @param newStatus new status
      */
     public void changeStatus(Long id, String newStatus) {
+        log.trace("Changing status of order");
         OrderStatus status = toOrderStatus(newStatus);
         orderDao.changeStatus(id,status);
     }
@@ -152,6 +158,7 @@ public class OrderService {
      * @return list of orders
      */
     public List<OrderDto> getOrderDtosByUser(String user) {
+        log.trace("Getting user order dtos");
         return orderDao.getOrdersByUser(userDao.getUser(user)).stream()
                 .map(o->modelMapper.map(o,OrderDto.class)).collect(Collectors.toList());
     }
@@ -161,6 +168,7 @@ public class OrderService {
      * @return list of orders
      */
     public List<OrderDto> getRecentOrderDtos() {
+        log.trace("Getting recent order dtos");
         return getRecentOrders().stream().map(o->modelMapper.map(o,OrderDto.class))
                 .collect(Collectors.toList());
     }
@@ -170,6 +178,7 @@ public class OrderService {
      * @return total gain
      */
     public TotalGainDto getTotalGainDto() {
+        log.trace("Getting total gain dto");
         TotalGainDto res = new TotalGainDto();
         Integer forMonth = 0, forWeek = 0;
 
@@ -193,10 +202,11 @@ public class OrderService {
     }
 
     /**
-     * get top clients
+     * get top client dtos
      * @return list of users
      */
-    public List<UserDto> getTopClients() {
+    public List<UserDto> getTopClientsDtos() {
+        log.trace("Getting top client dtos");
         Map<User,Integer> map = new HashMap<>();
         for (_Order order:getRecentOrders()) {
             User user = order.getClient();
@@ -218,6 +228,7 @@ public class OrderService {
      * @param card card
      */
     public void addOrder(OrderDto orderDto, String username, Address address, Card card) {
+        log.trace("Adding new order from order dto");
         _Order order = new _Order();
         order.setStatus(OrderStatus.UNPAID);
         User user = userDao.getUser(username);

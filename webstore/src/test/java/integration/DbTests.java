@@ -115,7 +115,7 @@ public class DbTests {
 
         Assert.assertEquals(3, orderService.getAllOrders().size());
         Assert.assertEquals(3, orderService.getRecentOrders().size());
-        Assert.assertEquals(6, productService.getTopProductsDto().size());
+        Assert.assertEquals(6, productService.getTopProductDtos().size());
     }
 
 }

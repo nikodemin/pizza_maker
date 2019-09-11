@@ -476,6 +476,6 @@ public class ProductRestController {
      */
     @GetMapping("/external/getTopProducts")
     public List<ProductDto> extGetTopProducts(){
-        return productService.getTopProductsDto();
+        return productService.getTopProductDtos();
     }
 }

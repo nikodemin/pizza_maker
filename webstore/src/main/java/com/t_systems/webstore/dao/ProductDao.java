@@ -9,7 +9,6 @@ import java.util.List;
 
 @Repository
 public class ProductDao {
-
     @PersistenceContext
     private EntityManager em;
 

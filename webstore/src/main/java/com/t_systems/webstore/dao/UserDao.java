@@ -10,7 +10,6 @@ import java.util.List;
 
 @Repository
 public class UserDao {
-
     @PersistenceContext
     private EntityManager em;
 

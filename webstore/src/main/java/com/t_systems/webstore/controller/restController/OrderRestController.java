@@ -130,8 +130,8 @@ public class OrderRestController {
      * get top clients
      * @return list of users
      */
-    @GetMapping("admin/getTopClients")
+    @GetMapping("admin/getTopClientsDtos")
     List<UserDto> getTopClients(){
-        return orderService.getTopClients();
+        return orderService.getTopClientsDtos();
     }
 }

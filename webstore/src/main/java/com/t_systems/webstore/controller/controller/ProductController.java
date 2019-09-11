@@ -7,7 +7,6 @@ import com.t_systems.webstore.model.dto.TagDto;
 import com.t_systems.webstore.model.enums.OrderStatus;
 import com.t_systems.webstore.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +18,8 @@ import java.util.stream.Stream;
 
 @Controller
 @RequiredArgsConstructor
-@Log4j
 public class ProductController {
     private final ProductService productService;
-
     /**
      * get admin page
      * @param model model
@@ -71,8 +68,7 @@ public class ProductController {
      */
     @GetMapping("/")
     public String getIndexPage(Model model){
-        log.info("Entered index page");
-        model.addAttribute("leaders", productService.getTopProductsDto());
+        model.addAttribute("leaders", productService.getTopProductDtos());
         model.addAttribute("categories",productService.getAllCategoryDtos());
         return "index";
     }

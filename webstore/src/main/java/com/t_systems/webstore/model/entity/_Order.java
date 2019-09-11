@@ -3,9 +3,7 @@ package com.t_systems.webstore.model.entity;
 import com.t_systems.webstore.model.enums.DeliveryMethod;
 import com.t_systems.webstore.model.enums.OrderStatus;
 import com.t_systems.webstore.model.enums.PaymentMethod;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -15,9 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "orders")
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public class _Order extends AbstractEntity{
     @ManyToOne(fetch = FetchType.EAGER)
     private User client;

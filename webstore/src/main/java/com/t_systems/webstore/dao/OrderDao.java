@@ -12,7 +12,6 @@ import java.util.List;
 
 @Repository
 public class OrderDao {
-
     @PersistenceContext
     private EntityManager em;
 
@@ -45,7 +44,7 @@ public class OrderDao {
     }
 
     public boolean isProductInOrder(AbstractProduct product) {
-        return em.createQuery("FROM _Order o WHERE :product IN elements(o.items)", _Order.class)
-                .setParameter("product", product).getResultList().size() > 0;
+        return !em.createQuery("FROM _Order o WHERE :product IN elements(o.items)", _Order.class)
+                .setParameter("product", product).getResultList().isEmpty();
     }
 }
