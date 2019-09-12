@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page language="java" pageEncoding="UTF-8" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <c:import url="_header.jsp"></c:import>
@@ -68,9 +69,11 @@
                         </c:forEach>
                         <c:out value="${product.lastIngredient.name}"></c:out>
                     </p>
-                    <button class="btn btn-primary btn-warning addToCart">
-                        <i class="fas fa-shopping-cart"></i>Add to cart
-                    </button>
+                    <sec:authorize access="!hasRole('ROLE_ADMIN')">
+                        <button class="btn btn-primary btn-warning addToCart">
+                            <i class="fas fa-shopping-cart"></i>Add to cart
+                        </button>
+                    </sec:authorize>
                 </div>
             </div>
         </c:forEach>

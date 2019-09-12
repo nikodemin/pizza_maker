@@ -283,15 +283,23 @@ public class ProductService {
     }
 
     /**
-     * remove category
-     * @param name category name
+     * try ti remove category. It fails if category contains products.
+     * @param name name
+     * @return boolean: successful or not
      */
-    public void removeCategory(String name) {
+    public boolean tryToRemoveCategory(String name) {
         log.trace("Removing category");
         Category category = categoryDao.getCategory(name);
-        tagDao.removeCategory(category);
-        ingredientDao.removeCategory(category);
-        categoryDao.removeCategory(name);
+        try {
+            tagDao.removeCategory(category);
+            ingredientDao.removeCategory(category);
+            categoryDao.removeCategory(name);
+        }
+        catch (Exception e){
+            log.error(e.getMessage(),e);
+            return false;
+        }
+        return true;
     }
 
     /**

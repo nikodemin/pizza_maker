@@ -40,14 +40,15 @@ public class ImageValidator implements Validator {
             return;
 
         for (CommonsMultipartFile file : files) {
-            if(file.isEmpty())
-                errors.rejectValue("file","File is empty");
+            if(file.isEmpty()) {
+                return;
+            }
             if(file.getContentType().contains("jpeg") ||
                     file.getContentType().contains("jpg") ||
                     file.getContentType().contains("png") ||
                     file.getContentType().contains("gif"))
                 continue;
-            errors.rejectValue("file","File is not a image");
+            errors.rejectValue("files","File is not a image");
         }
     }
 }

@@ -37,6 +37,7 @@
         <activemq.version>5.7.0</activemq.version>
         <slf4j-api.version>1.7.26</slf4j-api.version>
         <log4j.version>2.12.0</log4j.version>
+        <spring-security-taglibs.version>5.1.6.RELEASE</spring-security-taglibs.version>
     </properties>
 
     <build>
@@ -252,6 +253,12 @@
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-core</artifactId>
             <version>${activemq.version}</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-taglibs -->
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-taglibs</artifactId>
+            <version>${spring-security-taglibs.version}</version>
         </dependency>
     </dependencies>
 </project>

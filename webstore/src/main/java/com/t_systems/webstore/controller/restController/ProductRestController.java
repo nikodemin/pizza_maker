@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.support.ByteArrayMultipartFileEditor;
@@ -244,7 +245,11 @@ public class ProductRestController {
      * @throws Exception ex
      */
     @PostMapping("/admin/addCategory")
-    public ResponseEntity<?> addCategory(@ModelAttribute("categoryDto") @Valid CategoryDto category) throws Exception{
+    public ResponseEntity<?> addCategory(@ModelAttribute("categoryDto") @Valid CategoryDto category,
+                                         BindingResult result) throws Exception{
+            if(result.hasErrors()){
+                return new ResponseEntity<>("Not an image!", HttpStatus.BAD_REQUEST);
+            }
             String path = filesService.saveUploadedFiles(category.getFiles()).get(0);
             productService.addCategory(category, path);
             return new ResponseEntity<String>("Category added!", HttpStatus.OK);
@@ -266,7 +271,8 @@ public class ProductRestController {
      */
     @DeleteMapping("/admin/deleteCategory/{category}")
     public ResponseEntity<?> deleteCategory(@PathVariable("category") String category) {
-        productService.removeCategory(category);
+        if (!productService.tryToRemoveCategory(category))
+            return new ResponseEntity<>("There are products in category", HttpStatus.BAD_REQUEST);
         return new ResponseEntity<>("Category deleted!", HttpStatus.OK);
     }
 
@@ -429,7 +435,11 @@ public class ProductRestController {
     @PostMapping("/admin/updateProduct/{category}/{product}")
     public ResponseEntity<?> updateProduct(@PathVariable("category") String category,
                                            @PathVariable("product") String productName,
-                                           @ModelAttribute("productDto") ProductDto productDto) throws Exception {
+                                           @ModelAttribute("productDto") @Valid ProductDto productDto,
+                                           BindingResult result) throws Exception {
+        if (result.hasErrors()){
+            return new ResponseEntity<>("Not an image", HttpStatus.BAD_REQUEST);
+        }
         productService.updateProduct(productName,productDto);
         return new ResponseEntity<>("CatalogProduct updated!", HttpStatus.OK);
     }

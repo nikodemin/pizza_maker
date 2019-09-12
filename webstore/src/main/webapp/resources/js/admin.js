@@ -98,16 +98,6 @@ $(function () {
         })
     }
 
-    function showButtons() {
-        $('.topHide').show()
-        vueData.topProducts=false
-    }
-
-    function hideButtons() {
-        $('.topHide').hide()
-        vueData.topProducts=true
-    }
-
     var app = new Vue({
         el: '#app',
         data: vueData,
@@ -148,7 +138,7 @@ $(function () {
 
             getProductsByClick: function (e) {
                 getProducts(e.target.innerText)
-                showButtons()
+                vueData.topProducts=false
             },
             deleteCat: function (e) {
                 $.ajax({
@@ -187,6 +177,11 @@ $(function () {
                     priceDollars: $('#addIngForm input.priceDollars').val().trim(),
                     priceCents: $('#addIngForm input.priceCents').val().trim(),
                     categories: $('.ingCatToAddBtn.active').map(function () { return $(this).text().trim()}).get()
+                }
+
+                if(data.categories.length == 0){
+                    raisePopup('ERROR: no categories specified','danger')
+                    return
                 }
 
                 $.ajax({
@@ -229,6 +224,11 @@ $(function () {
                 var data = {
                     name : $('#addTagForm input').val().trim(),
                     categories: $('.catToAddBtn.active').map(function () {return $(this).text().trim()}).get()
+                }
+
+                if(data.categories.length == 0){
+                    raisePopup('ERROR: no categories specified','danger')
+                    return
                 }
 
                 $.ajax({
@@ -384,7 +384,7 @@ $(function () {
                     type: 'get',
                     success: function (data) {
                         vueData.products = data
-                        hideButtons()
+                        vueData.topProducts=true
                     },
                     error: function (jqXHR, status, errorThrown) {
                         raisePopup('ERROR: ' + jqXHR.responseText,'danger')

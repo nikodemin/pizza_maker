@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page language="java" pageEncoding="UTF-8" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <!DOCTYPE html>
@@ -40,6 +41,13 @@
                 </li>
             </c:if>
             <c:if test="${sessionScope.username != null}">
+                <sec:authorize access="hasRole('ROLE_ADMIN')">
+                    <li class="list-inline-item">
+                        <a href="<c:url value="/admin"></c:url>">
+                            <i class="fas fa-tools"></i> Admin Panel
+                        </a>
+                    </li>
+                </sec:authorize>
                 <li class="list-inline-item">
                     <a href="<c:url value="/settings"></c:url>">
                         <i class="fas fa-cog"></i> Settings
@@ -50,17 +58,21 @@
                         <i class="fas fa-sign-out-alt"></i> Sign out
                     </a>
                 </li>
+                <sec:authorize access="!hasRole('ROLE_ADMIN')">
+                    <li class="list-inline-item">
+                        <a href="<c:url value="/orders"></c:url>">
+                            <i class="fas fa-folder"></i> My orders
+                        </a>
+                    </li>
+                </sec:authorize>
+            </c:if>
+            <sec:authorize access="!hasRole('ROLE_ADMIN')">
                 <li class="list-inline-item">
-                    <a href="<c:url value="/orders"></c:url>">
-                        <i class="fas fa-folder"></i> My orders
+                    <a href="<c:url value="/cart"/>">
+                        <i class="fas fa-shopping-cart"></i> Cart
                     </a>
                 </li>
-            </c:if>
-            <li class="list-inline-item">
-                <a href="<c:url value="/cart"/>">
-                    <i class="fas fa-shopping-cart"></i> Cart
-                </a>
-            </li>
+            </sec:authorize>
         </ul>
         <div class="dropdown d-md-none">
             <button class="btn btn-secondary dropdown-toggle" type="button"

@@ -85,17 +85,17 @@
             <h5 v-if="product.isCustom == false">Spicy:{{product.spicy}}</h5>
             <h5 v-if="product.isCustom == false">Tags:
                 <div v-for="tag in product.tags" :data-name="tag.name">{{tag.name}}
-                    <button  @click="deleteTagFromProduct" class="topHide btn btn-primary btn-danger">&times;</button>
+                    <button v-if="topProducts == false"  @click="deleteTagFromProduct" class="btn btn-primary btn-danger">&times;</button>
                 </div>
             </h5>
             <h5>Ingredients:
                 <div v-for="ingredient in product.ingredients" :data-name="ingredient.name">{{ingredient.name}}
-                    <button v-if="product.isCustom == false" @click="deleteIngredientFromProduct" class="topHide btn btn-primary btn-danger">&times;</button>
+                    <button v-if="product.isCustom == false && topProducts == false" @click="deleteIngredientFromProduct" class="btn btn-primary btn-danger">&times;</button>
                 </div>
             </h5>
-            <button v-if="product.isCustom == false" @click="editProduct" class="btn btn-primary topHide">Edit</button>
+            <button v-if="product.isCustom == false && topProducts == false" @click="editProduct" class="btn btn-primary">Edit</button>
         </div>
-        <div class="product topHide">
+        <div v-if="topProducts == false" class="product">
             <button @click="addProduct" class="btn btn-primary" style="margin: auto;">Add Product</button>
         </div>
     </div>

@@ -5,7 +5,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 @Data
 public class CategoryDto {
-
     private String name;
     private CommonsMultipartFile[] files;
     private String image;

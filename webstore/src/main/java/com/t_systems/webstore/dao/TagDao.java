@@ -50,7 +50,7 @@ public class TagDao {
         List<Tag> tags = getTagsByCategory(category.getName());
         for (int i = 0; i < tags.size(); i++) {
             tags.get(i).getCategories().remove(category);
-            em.persist(tags.get(i));
+            em.merge(tags.get(i));
         }
         em.flush();
     }
