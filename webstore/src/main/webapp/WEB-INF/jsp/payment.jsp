@@ -16,11 +16,11 @@
     <div v-if="addressError==true" class="alert alert-danger">Not valid address data</div>
     <div v-if="delivery=='courier'">
         <form:form id="deliveryForm" modelAttribute="address">
-            <form:input path="country" type="text" required="true" placeholder="Country" cssClass="form-control"/>
-            <form:input path="city" type="text" required="true" placeholder="City" cssClass="form-control"/>
-            <form:input path="street" type="text" required="true" placeholder="Street" cssClass="form-control"/>
-            <form:input path="house" type="text" required="true" placeholder="House" cssClass="form-control"/>
-            <form:input path="flat" type="text" required="true" placeholder="Flat" cssClass="form-control"/>
+            <form:input path="country" type="text" required="true" placeholder="Country" cssClass="country form-control"/>
+            <form:input path="city" type="text" required="true" placeholder="City" cssClass="city form-control"/>
+            <form:input path="street" type="text" required="true" placeholder="Street" cssClass="street form-control"/>
+            <form:input path="house" type="text" required="true" placeholder="House" cssClass="house form-control"/>
+            <form:input path="flat" type="text" required="true" placeholder="Flat" cssClass="flat form-control"/>
         </form:form>
     </div>
     <div v-else>

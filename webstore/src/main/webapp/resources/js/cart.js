@@ -110,14 +110,30 @@ $(function () {
                 window.location = baseUrl + '/payment'
             },
             submitOrder: function () {
-                var deliveryForm = new FormData($('#deliveryForm')[0])
-                var cardForm = new FormData($('#cardForm')[0])
+                var deliveryForm = $('#deliveryForm')
+                var cardForm = $('#cardForm')
+
+                var data = {
+                    key:{
+                        country: deliveryForm.find('.country'),
+                        city: deliveryForm.find('.city'),
+                        street: deliveryForm.find('.street'),
+                        house: deliveryForm.find('.house'),
+                        flat: deliveryForm.find('.flat')
+                    },
+                    value:{
+                        cardNumber: cardForm.find(''),
+                        month: cardForm.find(''),
+                        year: cardForm.find(''),
+                        cvv: cardForm.find('')
+                    }
+                }
 
                 vueData.addressError = false
                 vueData.cardError = false
                 vueData.cardEmpty = false
 
-                /*$.ajax({
+                $.ajax({
                     url: baseUrl + '/isCartEmpty',
                     type: 'GET',
                     async: false,
@@ -131,69 +147,29 @@ $(function () {
                         raisePopup('ERROR: ' + jqXHR.responseText,'danger')
                         console.log('ERROR: ' + jqXHR.responseText)
                     }
-                })*/
+                })
 
 
                 if (vueData.cardEmpty)
                     return
 
-                if (vueData.delivery == 'courier')
-                    $.ajax({
-                        url: baseUrl + '/setAddress',
-                        type: 'POST',
-                        enctype: 'multipart/form-data',
-                        data: deliveryForm,
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        async: false,
-                        beforeSend: function(xhr) {
-                            xhr.setRequestHeader(header, token);
-                        },
-                        success: function(data){
-                            vueData.addressError = data
-                        },
-                        error: function (jqXHR, status, errorThrown) {
-                            raisePopup('ERROR: ' + jqXHR.responseText,'danger')
-                            console.log('ERROR: ' + jqXHR.responseText)
-                        }
-                    })
-                if (vueData.payment == 'card')
-                    $.ajax({
-                        url: baseUrl + '/setCard',
-                        type: 'POST',
-                        enctype: 'multipart/form-data',
-                        data: cardForm,
-                        cache: false,
-                        processData: false,
-                        contentType: false,
-                        async: false,
-                        beforeSend: function(xhr) {
-                            xhr.setRequestHeader(header, token);
-                        },
-                        success: function(data){
-                            vueData.cardError = data
-                        },
-                        error: function (jqXHR, status, errorThrown) {
-                            raisePopup('ERROR: ' + jqXHR.responseText,'danger')
-                            console.log('ERROR: ' + jqXHR.responseText)
-                        }
-                    })
-                if (vueData.cardError === false && vueData.addressError === false)
-                    $.ajax({
-                        url: baseUrl + '/submitOrder',
-                        type: 'POST',
-                        beforeSend: function(xhr) {
-                            xhr.setRequestHeader(header, token);
-                        },
-                        success: function(data){
-                            window.location = baseUrl + '/confirmation'
-                        },
-                        error: function (jqXHR, status, errorThrown) {
-                            raisePopup('ERROR: ' + jqXHR.responseText,'danger')
-                            console.log('ERROR: ' + jqXHR.responseText)
-                        }
-                    })
+                $.ajax({
+                    url: baseUrl + '/submitOrder',
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    beforeSend: function(xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
+                    success: function(data){
+                        //window.location = baseUrl + '/confirmation'
+                        raisePopup("SUCCESS",'success')
+                    },
+                    error: function (jqXHR, status, errorThrown) {
+                        raisePopup('ERROR: ' + jqXHR.responseText,'danger')
+                        console.log('ERROR: ' + jqXHR.responseText)
+                    }
+                })
             }
         }
     })
