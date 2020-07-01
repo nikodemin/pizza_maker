@@ -36,7 +36,7 @@
         <jms.version>5.1.9.RELEASE</jms.version>
         <activemq.version>5.7.0</activemq.version>
         <slf4j-api.version>1.7.26</slf4j-api.version>
-        <log4j.version>2.12.0</log4j.version>
+        <log4j.version>2.13.3</log4j.version>
         <spring-security-taglibs.version>5.1.6.RELEASE</spring-security-taglibs.version>
     </properties>
 
