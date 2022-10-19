@@ -31,7 +31,7 @@
         <hibernate-validator.version>6.0.17.Final</hibernate-validator.version>
         <commons-fileupload.version>1.4</commons-fileupload.version>
         <commons-io.version>2.6</commons-io.version>
-        <jackson.version>2.9.9</jackson.version>
+        <jackson.version>2.13.4.1</jackson.version>
         <mockito.version>2.0.2-beta</mockito.version>
         <jms.version>5.1.9.RELEASE</jms.version>
         <activemq.version>5.7.0</activemq.version>
